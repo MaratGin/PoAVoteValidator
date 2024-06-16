@@ -1,6 +1,6 @@
-#export SERVER_PORT=10098
-#cargo run &
+export SERVER_PORT=10098
+cargo run &
 
 # Запускаем второй сервер на порту 8081
-export SERVER_PORT=10030
+export SERVER_PORT=10037
 cargo run &
