@@ -85,7 +85,7 @@ async fn receive_genesis_block(genesis_block: web::Json<GenesisBlock>) -> impl R
 }
 
 async fn get_votes_by_user(query: web::Query<HashMap<String, String>>) -> impl Responder {
-    // println!("TEST");
+    println!("user name");
     let user_name = match query.get("user_name") {
         Some(name) => name.clone(),
         None => return HttpResponse::BadRequest().body("Missing user_name parameter"),
@@ -272,16 +272,36 @@ async fn main() -> std::io::Result<()>{
             .route("/genesis", web::post().to(receive_genesis_block))
             .route("/getVotes", web::get().to(get_votes_by_user))
             .route("/vote", web::post().to(handle_vote))
+            .route("/test", web::get().to(test))
             .route("/getHistory", web::get().to(get_history))
+            .route("/blockNumber", web::get().to(get_number))
 
 
     })
-        .bind("127.0.0.1:10040")?
-        // .bind(("127.0.0.1", port))?
+        // .bind("127.0.0.1:10040")?
+        .bind(("127.0.0.1", port))?
 
 
         .run()
         .await
 }
 
+
+async fn get_number() -> impl Responder {
+    // let mut blocks = load_blocks().unwrap_or_else(|_| vec![]);
+    println!("seeing blocks");
+
+    match load_blocks() {
+        Ok(blocks) => HttpResponse::Ok().json(blocks.len()),
+        Err(err) => HttpResponse::InternalServerError().body(format!("Failed to load blocks: {}", err)),
+    }
+}
+
+
+async fn test() -> impl Responder {
+
+    HttpResponse::Ok().body("Hello world!");
+    println!("TEST /test");
+    "test"
+}
 
